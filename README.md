@@ -2,7 +2,7 @@
 
 To run the project, just:
 
-`docker-compose up`
+`docker-compose up -d`
 
 
 ## .env file

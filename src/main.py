@@ -71,8 +71,8 @@ async def main():
                 print(f'TOTAL {len(new_products_id)}')
                 await send_discord(f'CHANGES {products_data} - {datetime.now()}')
             else:
-                print(
-                    f'TOTAL {len(new_products_id)} - NO CHANGES: {datetime.now()}')
+                message = f'TOTAL {len(new_products_id)} - NO CHANGES: {datetime.now()}'
+                print(message)
         except Exception as err:
             print(err)
 

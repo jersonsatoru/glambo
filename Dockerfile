@@ -4,14 +4,14 @@ WORKDIR /usr/app
 
 RUN apk add --no-cache gcc python3-dev linux-headers libc-dev musl-dev
 
-RUN pip install pipenv
+ENV PIPENV_VENV_IN_PROEJCT=true
 
 COPY Pipfile.lock ./
 
-RUN pipenv shell
+RUN pip install --no-cache-dir pipenv
 
-RUN pipenv sync
+RUN pipenv sync --system
 
 COPY . .
 
-CMD ["python", "./src/main.py"]
+CMD ["python", "-u", "./src/main.py"]
