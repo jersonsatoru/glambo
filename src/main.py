@@ -58,26 +58,31 @@ async def send_discord(text):
 async def main():
     products_id = set()
     while True:
-        try:
-            showcase = await get_showcase()
-            content = showcase.get('content', [])
-            new_products_id = {p.get('productVariantId') for p in content}
-            changes = new_products_id ^ products_id
-            if changes:
-                products_id = new_products_id
-                products_data = [product for product in content
-                                 if product.get('productVariantId') in changes]
-
-                print(f'TOTAL {len(new_products_id)}')
-                await send_discord(f'CHANGES {products_data} - {datetime.now()}')
-            else:
-                message = f'TOTAL {len(new_products_id)} - NO CHANGES: {datetime.now()}'
-                print(message)
-        except Exception as err:
-            print(err)
-
+        await get_changes(products_id)
         await asyncio.sleep(60)
 
+async def get_changes(products_id):
+    try:
+        showcase = await get_showcase()
+        content = showcase.get('content', [])
+        new_products_id = {p.get('productVariantId') for p in content}
+        changes = new_products_id ^ products_id
+        if changes:
+            products_id = new_products_id
+            products_data = [product for product in content if product.get('productVariantId') in changes]
+            messages = [get_message(product) for product in products_data]
+            await send_discord('\n'.join(messages))
+        else:
+            message = f'TOTAL {len(new_products_id)} - NO CHANGES: {datetime.now()}'
+            print(message)
+    except Exception as err:
+        print(err)
+
+def get_message(product):
+    return (
+        f'PRODUTO: {product.get("productVariantName")} - '
+        f'VALOR: {product.get("tradePoints")} - QTD: {product.get("stockCount")}'
+    )
 
 if __name__ == '__main__':
     asyncio.run(main())

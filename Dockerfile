@@ -10,6 +10,12 @@ COPY Pipfile.lock ./
 
 RUN pip install --no-cache-dir pipenv
 
+RUN pip install -U pylint
+
+RUN pip install -U mypy
+
+RUN pip install -U autopep8
+
 RUN pipenv sync --system
 
 COPY . .
