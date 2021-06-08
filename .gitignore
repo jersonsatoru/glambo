@@ -1,3 +1,7 @@
 .mypy_cache
 .venv
 .env
+.devcontainer
+devcontainer.json
+**/__pycache__
+.vscode
