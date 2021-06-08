@@ -36,5 +36,3 @@ def get_product():
         'showOnWebsite': True,
         'sellable': False
     }
-
-print(__name__)
