@@ -13,7 +13,6 @@ glambox_baseurl = 'https://apiclient.glambox.com.br'
 glambox_username = os.environ.get('GLAMBOX_USERNAME')
 glambox_password = os.environ.get('GLAMBOX_PASSWORD')
 
-
 async def get_token():
     async with aiohttp.ClientSession() as session:
         credentials = {
