@@ -55,12 +55,6 @@ async def send_discord(text):
         await session.post(discord_webhook, json={'content': text})
 
 
-async def main():
-    products_id = set()
-    while True:
-        await get_changes(products_id)
-        await asyncio.sleep(60)
-
 async def get_changes(products_id):
     try:
         showcase = await get_showcase()
@@ -69,7 +63,8 @@ async def get_changes(products_id):
         changes = new_products_id ^ products_id
         if changes:
             products_id = new_products_id
-            products_data = [product for product in content if product.get('productVariantId') in changes]
+            products_data = [product for product in content if product.get(
+                'productVariantId') in changes]
             messages = [get_message(product) for product in products_data]
             await send_discord('\n'.join(messages))
         else:
@@ -77,12 +72,24 @@ async def get_changes(products_id):
             print(message)
     except Exception as err:
         print(err)
+    finally:
+        return products_id
+
 
 def get_message(product):
     return (
         f'PRODUTO: {product.get("productVariantName")} - '
         f'VALOR: {product.get("tradePoints")} - QTD: {product.get("stockCount")}'
     )
+
+
+async def main():
+    # nosso db
+    products_id = set()
+    while True:
+        products_id = await get_changes(products_id)
+        await asyncio.sleep(60)
+
 
 if __name__ == '__main__':
     asyncio.run(main())
